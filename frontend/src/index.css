@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-primary: #f0f7ff;
+  --bg-card: #ffffff;
+  --border-dashed: #93c5fd;
+  --border-subtle: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --accent-blue: #2563eb;
+  --accent-green: #059669;
+  --accent-yellow: #eab308;
+  --accent-orange: #ea580c;
+  --accent-red: #dc2626;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input {
+  font-family: inherit;
+}
