@@ -24,7 +24,7 @@ class DatasetSummarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UploadedDataset
-        fields = ["id", "name", "score", "metrics", "uploaded_at", "enhanced_csv"]
+        fields = ["id", "name", "score", "metrics", "uploaded_at", "enhanced_csv", "raw_csv"]
 
     def get_enhanced_csv(self, obj):
         return bool(obj.enhanced_csv)
@@ -40,5 +40,6 @@ class DatasetDetailSerializer(serializers.ModelSerializer):
             "metrics",
             "uploaded_at",
             "enhanced_csv",
+            "raw_csv",
         ]
 

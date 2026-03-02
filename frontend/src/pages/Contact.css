@@ -1,0 +1,24 @@
+.contact-page {
+  min-height: 100vh;
+  padding: 3rem 2rem;
+  background: #ffffff;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contact-header h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.contact-content p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.contact-content ul {
+  list-style: disc inside;
+  font-size: 1.125rem;
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getDataset, claimDataset, enhanceDataset, downloadEnhancedFile } from '../api'
@@ -16,10 +16,11 @@ export default function Results() {
   const { isAuthenticated } = useAuth()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
   const [error, setError] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('completeness')
   const [enhancing, setEnhancing] = useState(false)
-  const [viewMode, setViewMode] = useState('enhanced') // 'original' | 'enhanced'
+  const [viewMode, setViewMode] = useState('enhanced')
 
   useEffect(() => {
     const stored = localStorage.getItem(`dataset_${datasetId}`)
@@ -34,13 +35,32 @@ export default function Results() {
           setData(res)
           localStorage.setItem(`dataset_${datasetId}`, JSON.stringify(res))
         })
-        .catch(() => setError('Could not load dataset.'))
+        .catch((err) => {
+          // clear stale cache when we can't fetch
+          localStorage.removeItem(`dataset_${datasetId}`)
+          setData(null)
+          if (err.response) {
+            if (err.response.status === 404) {
+              setLoadError('Dataset not found. Please upload again.')
+            } else if (err.response.status === 403) {
+              setLoadError('You do not have permission to view this dataset.')
+            } else if (err.response.status === 401) {
+              setLoadError('Please sign in to view this dataset.')
+            } else {
+              setLoadError('Could not load dataset.')
+            }
+          } else {
+            setLoadError('Could not load dataset.')
+          }
+        })
         .finally(() => setLoading(false))
     } else {
       setLoading(false)
-      if (!stored && datasetId) setError('Dataset not found. Please upload again.')
+      if (!stored && datasetId) setLoadError('Dataset not found. Please upload again.')
     }
   }, [datasetId, isAuthenticated])
+
+
 
   const handleUnlockFullReport = () => {
     navigate('/signin', { state: { redirect: `/dashboard`, claimId: datasetId } })
@@ -65,12 +85,25 @@ export default function Results() {
   }
 
   if (loading) return <div className="results-loading">Loading...</div>
-  if (error && !data) return <div className="results-error">{error}</div>
+  if (loadError && !data)
+    return (
+      <div className="results-error">
+        {loadError}
+        {/* offer action when appropriate */}
+        {loadError.includes('sign in') && (
+          <p>
+            <button onClick={() => navigate('/signin')}>Sign in</button> to continue.
+          </p>
+        )}
+      </div>
+    )
 
   const metrics = data?.metrics || {}
   const score = data?.score ?? 0
   const issues = metrics.issues || []
-  const issueCount = issues.length
+  const columnIssues = metrics.column_issues || {}
+  const issueCount = issues.length +
+    Object.values(columnIssues).reduce((acc, arr) => acc + (arr?.length || 0), 0)
 
   const getCategoryValue = (key) => metrics[key] ?? 0
   const getCategoryStatus = (key) => {
@@ -86,6 +119,8 @@ export default function Results() {
     type_consistency: 'Type consistency ensures columns have uniform data types. Mixed types can cause errors during processing.',
   }
 
+
+
   return (
     <div className="results">
       <div className="results-layout">
@@ -94,6 +129,20 @@ export default function Results() {
             <h2>Your Score</h2>
             <p className="score-value">{Math.round(score)}/100</p>
             <p className="issue-count">{issueCount} {issueCount === 1 ? 'Issue' : 'Issues'}</p>
+            {Object.keys(columnIssues).length > 0 && (
+              <div className="column-issues">
+                <h4>Column details:</h4>
+                <ul>
+                  {Object.entries(columnIssues).map(([col, arr]) =>
+                    arr.length ? (
+                      <li key={col}>
+                        <strong>{col}:</strong> {arr.join(', ')}
+                      </li>
+                    ) : null
+                  )}
+                </ul>
+              </div>
+            )}
           </div>
 
           <div className="categories">
@@ -196,6 +245,8 @@ export default function Results() {
       </div>
 
       {error && <p className="results-error">{error}</p>}
+      {/* display load error at bottom only if we still have some data to show */}
+      {loadError && data && <p className="results-error">{loadError}</p>}
     </div>
   )
 }

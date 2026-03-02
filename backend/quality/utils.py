@@ -63,6 +63,20 @@ def compute_quality_score(df: pd.DataFrame) -> Tuple[float, Dict[str, Any]]:
             f"Columns with inconsistent types: {', '.join(mixed_type_columns[:5])}"
         )
 
+    # per-column diagnostics
+    column_issues: dict[str, list[str]] = {}
+    for col in df.columns:
+        col_issues: list[str] = []
+        missing = int(df[col].isna().sum())
+        if missing > 0:
+            col_issues.append(f"{missing} missing value{'' if missing == 1 else 's'}")
+        # check numeric columns for non-numeric
+        if pd.api.types.is_numeric_dtype(df[col]):
+            non_numeric = df[col].apply(lambda x: isinstance(x, str) and x.strip() != "").sum()
+            if non_numeric > 0:
+                col_issues.append(f"{non_numeric} non-numeric entr{'' if non_numeric == 1 else 'ies'}")
+        column_issues[col] = col_issues
+
     metrics = {
         "completeness": round(completeness, 1),
         "uniqueness": round(uniqueness, 1),
@@ -72,6 +86,7 @@ def compute_quality_score(df: pd.DataFrame) -> Tuple[float, Dict[str, Any]]:
         "duplicate_rows": duplicate_rows,
         "mixed_type_columns": mixed_type_columns,
         "issues": issues,
+        "column_issues": column_issues,
     }
     return score, metrics
 

@@ -1,15 +1,15 @@
 # Data Quality Checker
 
-A full-stack data quality checker application with React (Vite) frontend and Django backend. Upload CSV or Excel files, view quality scores, unlock full reports with authentication, and enhance data with AI-powered corrections.
+A full-stack data quality checker application with React (Vite) frontend and Django backend. The project lets you upload CSV or Excel files, computes data quality metrics (completeness, uniqueness, type consistency), and provides an authenticated dashboard with charts, filters and an AI‑powered enhancement feature. Users can download corrected versions of their data and view a detailed report for each file.
 
 ## Features
 
-- **Landing Page**: Upload your data or use a sample template
-- **Quality Score**: View completeness, uniqueness, and type consistency metrics
-- **Unlock Full Report**: Sign in/sign up to access detailed reports
-- **Dashboard**: KPIs, gauge, bar charts, donut chart, error breakdown (correct, warnings, errors, fatal)
-- **Enhance with AI**: Fix missing values, remove duplicates, improve data quality
-- **Download**: Export the corrected dataset
+- **Landing Page** – drag‑and‑drop or browse for a CSV/Excel file, or download a sample template.
+- **Quality Score** – get an overall score and a breakdown of your checks (correct, warnings, errors, fatal).
+- **Unlock Full Report** – authentication gives you access to a full report page for each dataset.
+- **Dashboard** – after unlocking, the dashboard displays KPI cards, a gauge, charts and a dataset area. Select a dataset from the left column to see its details on the right; the report section lives next to the dataset list so you can always choose a file and immediately click “View report page”. Column‑level filters let you drill into specific values and regenerate the charts accordingly.
+- **Enhance with AI** – optionally correct issues and missing values with a single click.
+- **Download** – get the enhanced dataset as a CSV file.
 
 ## Tech Stack
 
@@ -17,6 +17,10 @@ A full-stack data quality checker application with React (Vite) frontend and Dja
 - **Backend**: Django 5, Django REST Framework, Pandas, OpenPyXL
 
 ## Setup
+
+### Prerequisites
+
+You need Python (3.11+ recommended) and Node.js (16+). Git is helpful for cloning the repo.
 
 ### Backend (Django)
 
@@ -30,7 +34,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-The API runs at `http://127.0.0.1:8000`.
+The API runs at `http://127.0.0.1:8000` by default. You can change the address/port with `python manage.py runserver <addr:port>` if necessary.
 
 ### Frontend (React)
 
@@ -40,18 +44,23 @@ npm install
 npm run dev
 ```
 
-The app runs at `http://localhost:5173` and proxies API requests to the backend.
+The app runs at `http://localhost:5173` (or the next available port if 5173 is in use) and proxies API requests to the backend. The exact port is printed to the terminal when you start `npm run dev`.
 
 ## Usage
 
-1. Open `http://localhost:5173`
-2. Upload a CSV or Excel file, or choose a sample template
-3. View your data quality score and category breakdown
-4. Click **Unlock Full Report** to sign in or create an account
-5. After authentication, access the dashboard and use **Enhance with AI** to fix issues
-6. Download the corrected file
+1. Start the backend, then the frontend (see Setup above).
+2. Open the URL shown by the Vite server in your browser (e.g. `http://localhost:5173`).
+3. On the landing page upload a CSV/Excel file; the app will automatically compute a score.
+4. To see the full report and dashboard, click **Unlock Full Report** and register or sign in. After logging in you'll be taken to the dashboard.
+5. The dashboard header shows overall scores and offers filters; charts appear in the main area. Use the **Your datasets** panel at the bottom (or side on wide screens) to pick a file—its details and a **View report page** button will appear beside the list. Column filters let you drill down into subsets of the data with updated charts.
+6. Optionally click **Enhance with AI** to generate a cleaned version of the dataset, then download it using the button that replaces the enhancement link.
+7. You can revisit reports from the dashboard or via links in the results page.
+
+> **Tip:** if the frontend server reports “port X is in use” it will increment and try the next port automatically; simply refresh the browser when it starts.
 
 ## Project Structure
+
+The following tree shows the key folders and files. You don’t need to understand every file to run the project, but the organization may help you navigate the code.
 
 ```
 data-quality-saas-pro/

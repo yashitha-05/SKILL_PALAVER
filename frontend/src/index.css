@@ -7,20 +7,20 @@
 }
 
 :root {
-  --bg-primary: #f0f7ff;
+  --bg-primary: #D6F4ED; /* light mint */
   --bg-card: #ffffff;
-  --border-dashed: #93c5fd;
-  --border-subtle: #e5e7eb;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --accent-blue: #2563eb;
-  --accent-green: #059669;
-  --accent-yellow: #eab308;
-  --accent-orange: #ea580c;
-  --accent-red: #dc2626;
+  --border-dashed: #87BAC3;
+  --border-subtle: #d1d5db;
+  --text-primary: #473472; /* deep purple */
+  --text-secondary: #53629E; /* bluish */
+  --accent-blue: #53629E;
+  --accent-green: #87BAC3;
+  --accent-yellow: #F5CDAE;
+  --accent-orange: #EA580C;
+  --accent-red: #DC2626;
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --bg-hover: rgba(0,0,0,0.05);
 }
-
 body {
   font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   background: var(--bg-primary);
@@ -31,8 +31,14 @@ body {
 button {
   cursor: pointer;
   font-family: inherit;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
 }
 
 input {
   font-family: inherit;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+a {
+  transition: color 0.2s, transform 0.2s;
 }
